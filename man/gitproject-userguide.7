@@ -1,0 +1,194 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "GITPROJECT\-USERGUIDE" "7" "September 2015" "" "Git Project User Guide"
+.
+.SH "NAME"
+\fBgitproject\-userguide\fR \- git\-project user guide
+.
+.SH "TABLE OF CONTENTS"
+.
+.TP
+\fIIntroduction\fR
+Introduction to git\-project
+.
+.TP
+\fIInstallation\fR
+How to install git\-project on your system
+.
+.TP
+\fIDocumentation\fR
+How to find documentation
+.
+.TP
+\fIBasic use\fR
+Every day tasks
+.
+.TP
+\fIWorkflow\fR
+Standard workflow
+.
+.TP
+\fIThe Gits of it all\fR
+The inner git workings of git\-project
+.
+.TP
+\fIContributors\fR
+References to 3rd party components used in git\-project
+.
+.SH "INTRODUCTION"
+
+.
+.P
+Git\-project is just a wrapper to basic git commands to simplify ever day tasks working with a source code based component model\.
+.
+.P
+At its heart, git\-project is just git submodules\. That\'s it\.
+.
+.P
+Git\-project wraps complex or multiple commands into easy to use and well documented single commands that can be used for every day tasks and supports a robust work flow of short lived topic branches for contributing in small manageable code changes\.
+.
+.SS "Components"
+Git\-project\'s main purpose is to make it easy to work with a \fBsource code based component model\fR, a\.k\.a\. submodules\.
+.
+.P
+A component is simply a git submodule\. The terminology \fIcomponent\fR comes from \fBcomponent based architecture\fR principles, where a component is an isolated module that is built for reuse\.
+.
+.P
+Git\-project is constructed with the assumption that the same components are reused across multiple projects, probably with different configurations, perhaps even of different versions, and that the components are distributed using source code instead of compiled libraries\.
+.
+.SS "Git Submodule References"
+Git Docs \fIhttp://git\-scm\.com/docs/git\-submodule\fR Git Book \fIhttps://git\-scm\.com/book/en/v2/Git\-Tools\-Submodules\fR
+.
+.SH "INSTALLATION"
+.
+.SS "First Time Installation"
+Run:
+.
+.P
+$ sudo \fBmake install\fR
+.
+.P
+To learn about the default installation path or how to change the installation path, run:
+.
+.P
+$ \fBmake help\fR
+.
+.SS "Update"
+Once installed, to get the latest version run:
+.
+.P
+$ \fBgit project sw\-update\fR
+.
+.SS "Check Version"
+To check which version is installed, run:
+.
+.P
+$ \fBgit project \-\-version\fR
+.
+.SS "License"
+\fBgit\-project\fR is released under the MIT License \fIhttp://opensource\.org/licenses/mit\-license\.html\fR\.
+.
+.SH "DOCUMENTATION"
+After installation, the documentation is available as man\-pages to \fIgitproject\-userguide\fR (this guide) and \fIgit\-project\fR, the top command\.
+.
+.P
+A short usage description is also available by passing the \-h flag to the command\.
+.
+.P
+$ \fBgit project \-h\fR
+.
+.P
+The man pages can in addition to \fIman git\-project(1)\fR also be shown using:
+.
+.P
+$ \fBgit project \-\-help\fR
+.
+.P
+All commands has its own usage description and man pages\.
+.
+.P
+$ \fBgit project\fR <command> \-h|\-\-help
+.
+.SH "BASIC USE"
+.
+.SS "List Available Commands"
+To list the available commands, run:
+.
+.P
+$ \fBgit project \-\-commands\fR
+.
+.SS "Create a Project Repository"
+To create a new project repository, create a folder just as you would for a standard git repository, but instead of \fIgit init\fR, run:
+.
+.P
+$ \fBgit project init\fR
+.
+.P
+If you want to use a different template than the standard template, pass the path to the template repository using:
+.
+.P
+$ \fBgit project init \-\-template "PATH\-TO\-REPO"\fR
+.
+.P
+If the project already has an empty central repository that should be considered its origin, it can be assigned directly using
+.
+.P
+$ \fBgit project init \-\-origin "PATH\-TO\-REPO"\fR
+.
+.SS "Clone a Project Repository"
+To clone a project repository and have it automatically do all needed configuration and download of sub\-components, run:
+.
+.P
+$ \fBgit project clone "PATH\-TO\-REPO"\fR
+.
+.P
+git project clone supports the same clone arguments as \fBgit clone\fR\.
+.
+.SS "Check Project Status"
+To check the status of the entire project repository, run:
+.
+.P
+$ \fBgit project status\fR
+.
+.SS "Create a Branch"
+To create a branch in the project repository and all its components, run:
+.
+.P
+$ \fBgit project branch\fR
+.
+.SH "WORKFLOW"
+TODO
+.
+.SH "THE GITS OF IT ALL"
+TODO
+.
+.SH "CONTRIBUTERS"
+Git project uses code and components of other Open Source Projects\.
+.
+.P
+Git Extras \fIhttps://github\.com/tj/git\-extras\fR
+.
+.P
+Git Hooks \fIhttps://github\.com/icefox/git\-hooks\fR
+.
+.P
+Ronn \fIhttps://github\.com/rtomayko/ronn\fR
+.
+.P
+Sharness \fIhttps://github\.com/mlafeldt/sharness\fR
+.
+.SH "COPYRIGHT"
+\(co DevConSoft, 2015
+.
+.P
+\(co Zenterio AB, 2015
+.
+.SH "LICENCE"
+\fBgit\-project\fR is released under the MIT License \fIhttp://opensource\.org/licenses/mit\-license\.html\fR\.
+.
+.SH "REPORTING BUGS"
+TBD
+.
+.SH "SEE ALSO"
+TBD

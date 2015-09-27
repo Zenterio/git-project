@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>git-project(1) - git project&#39;s manual page</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+  <style type='text/css' media='all'>
+  /* style: toc */
+  .man-navigation {display:block !important;position:fixed;top:0;left:113ex;height:100%;width:100%;padding:48px 0 0 0;border-left:1px solid #dbdbdb;background:#eee}
+  .man-navigation a,.man-navigation a:hover,.man-navigation a:link,.man-navigation a:visited {display:block;margin:0;padding:5px 2px 5px 30px;color:#999;text-decoration:none}
+  .man-navigation a:hover {color:#111;text-decoration:underline}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#OPTIONS">OPTIONS</a>
+    <a href="#COMMON-GIT-PROJECT-COMMANDS">COMMON GIT PROJECT COMMANDS</a>
+    <a href="#ADDITIONAL-COMMANDS">ADDITIONAL COMMANDS</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>git-project(1)</li>
+    <li class='tc'>Git project</li>
+    <li class='tr'>git-project(1)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>git-project</code> - <span class="man-whatis">git project's manual page</span>
+</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>git-project</code> [--commands] [-h,--help] [--sw-update] [-v,--version] [&lt;command&gt;]</p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p>Utility to manage complex projects in git.</p>
+
+<p>An overview of git project is available on <code>git help gitproject-userguide</code>.</p>
+
+<h2 id="OPTIONS">OPTIONS</h2>
+
+<dl>
+<dt>--commands</dt><dd><p>Print the available commands.</p></dd>
+<dt class="flush">-h</dt><dd><p>Print usage. This option can also be used for any of the project commands.</p></dd>
+<dt class="flush">--help</dt><dd><p>Show this help. This option can also be used for any of the project commands.</p></dd>
+<dt>--sw-update</dt><dd><p>Update git-project installation with latest version.
+Alias to <code>git project sw-update</code>.</p></dd>
+<dt class="flush">-v</dt><dd><p>Print git-project's version number.</p></dd>
+<dt>--version</dt><dd><p>Print git-project's version string.</p></dd>
+</dl>
+
+
+<h2 id="COMMON-GIT-PROJECT-COMMANDS">COMMON GIT PROJECT COMMANDS</h2>
+
+<ul>
+<li> <strong><span class="man-ref">git-project-clone<span class="s">(1)</span></span></strong> Clone a git project repository</li>
+<li> <strong><span class="man-ref">git-project-init<span class="s">(1)</span></span></strong> Create a git project repository</li>
+<li> <strong><span class="man-ref">git-project-status<span class="s">(1)</span></span></strong> Print status</li>
+<li> <strong><span class="man-ref">git-project-sw-update<span class="s">(1)</span></span></strong> Update installation with latest version of git-project</li>
+</ul>
+
+
+<p>For a full list of commands, run <code>git project --commands</code></p>
+
+<h2 id="ADDITIONAL-COMMANDS">ADDITIONAL COMMANDS</h2>
+
+<p>  Additional commands also installed but not part of the git-project namespace.</p>
+
+<ul>
+<li> <strong><span class="man-ref">git-summary<span class="s">(1)</span></span></strong> Show repository summary</li>
+<li> <strong><span class="man-ref">git-hooks<span class="s">(1)</span></span></strong> Manage git hooks</li>
+</ul>
+
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>September 2015</li>
+    <li class='tr'>git-project(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>

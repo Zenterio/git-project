@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+##copyright##
+
+set -eu
+
+usage() {
+    echo "Usage:"
+    echo " $SCRIPT [--commands] [-h,--help] [--sw-update]"
+    echo "    [-v,--version] [<command>]"
+    echo ""
+    echo "options:"
+    echo " --commands           Print list of available commands"
+    echo " -h                   Print this usage"
+    echo " --help               Show man page"
+    echo " --sw-update          Update git-project installation with latest version"
+    echo " -v                   Print git-project's version number"
+    echo " --version            Print git-project's version string"
+    echo ""
+    echo "Run 'git help gitproject' to access the git-project user manual."
+    echo ""
+}
+
+##array-contains##
+
+run-command() {
+    local command="$1"
+    shift
+    git project-${command} "$@"
+}
+
+print-version-str() {
+    echo $VERSION_STR
+}
+
+print-version() {
+    echo $VERSION
+}
+
+print-commands() {
+    echo "${COMMANDS[@]}"
+}
+
+SCRIPT=$(basename $0)
+VERSION="0.7.0"
+VERSION_STR="git project version ${VERSION}"
+INSTALL_DIR=$(dirname $0)
+
+# Assume all files in the install directory are sub-commands to git-project
+COMMANDS=($(cd $INSTALL_DIR && ls git-project-*))
+# Remove git-project- from the file names to get the name of the commands.
+COMMANDS=("${COMMANDS[@]/#git-project-/}")
+
+# Delegate to sub commands
+set +u
+if array-contains "$1" "${COMMANDS[@]}"; then
+    run-command "$@"
+    exit $?
+fi
+set -u
+
+# --sw-update, alias for command sw-update
+set +u
+if [ "$1" = "--sw-update" ]; then
+    shift
+    run-command sw-update "$@"
+    exit $?
+fi
+set -u
+
+# Options to git-project
+set +e
+ARGS=$(getopt -o hv -l "help,version,commands" -n "$SCRIPT" -- "$@");
+if [ $? -ne 0 ]; then
+    set -e
+    usage
+    exit 2
+fi
+set -e
+
+eval set -- "$ARGS";
+
+while true; do
+    case $1 in
+        -h)
+            shift
+            usage
+            exit 0
+            ;;
+        --help)
+            shift
+            git help project "$@"
+            exit 0
+            ;;
+        --version)
+            print-version-str
+            exit $?
+            ;;
+        -v)
+            shift
+            print-version
+            exit $?
+            ;;
+        --commands)
+            shift
+            print-commands
+            exit $?
+            ;;
+        --)
+            shift;
+            break;
+            ;;
+    esac
+done
+
+usage
+exit 2

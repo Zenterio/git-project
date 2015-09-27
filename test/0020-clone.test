@@ -1,0 +1,50 @@
+#
+# Test git-project-sw-update
+#
+test_description='git project clone'
+. ./test.sh
+
+test_exec create_full_project_repo
+
+test_expect_success 'invalid option exits with 129' '
+    test_expect_code 129 git project clone --invalid-option
+'
+
+test_expect_success 'require at least one option, otherwise exits with 129' '
+    test_expect_code 129 git project clone
+'
+
+test_expect_success '-h' '
+    git project clone -h
+'
+
+test_expect_success '--help' '
+    git project clone --help
+'
+
+test_expect_success 'invalid repo exits with 128 (fail to clone)' '
+    test_expect_code 128 git project clone "invalid-repo" proj_invalid_repo
+'
+
+test_expect_success 'clone <REPO>' '
+    git project clone "${FULL_PROJECT_PATH}" proj &&
+    test_when_finished "rm -rf proj" &&
+    ls proj/component/repo.info &&
+    test_equal "proj/component/repo.info" "${COMPONENT_PATH}" &&
+    ls proj/component/component/repo.info &&
+    test_equal "proj/component/component/repo.info" "${SUBCOMPONENT_PATH}"
+'
+
+test_expect_success 'clone <REPO> --bare' '
+    git project clone --bare "${FULL_PROJECT_PATH}" proj.git &&
+    ls proj.git &&
+    test_when_finished "rm -rf proj.git" &&
+    git project clone proj.git proj_from_bare &&
+    test_when_finished "rm -rf proj_from_bare" &&
+    ls proj_from_bare/component/repo.info &&
+    test_equal "proj_from_bare/component/repo.info" "${COMPONENT_PATH}" &&
+    ls proj_from_bare/component/component/repo.info &&
+    test_equal "proj_from_bare/component/component/repo.info" "${SUBCOMPONENT_PATH}"
+'
+
+test_done

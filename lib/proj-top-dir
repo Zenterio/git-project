@@ -1,0 +1,9 @@
+proj_top_dir() {
+    local topdir;
+    topdir=$(git rev-parse --git-dir)
+    topdir=${topdir%.git*}
+    if [ -z "${topdir}" ]; then
+        topdir="."
+    fi
+    (cd "${topdir}" && pwd)
+}

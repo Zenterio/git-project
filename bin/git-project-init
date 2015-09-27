@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+##copyright##
+
+set -eu
+
+usage() {
+    echo "Usage:"
+    echo " $SCRIPT [-h,--help] [-o,--origin]"
+    echo "    [-p,--print-template] [-t,--template=TEMPLATE] [<DIRECTORY>]"
+    echo ""
+    echo "options:"
+    echo " -h                   Print this usage"
+    echo " --help               Show man page"
+    echo " -o, --origin         Path to the remote origin repository"
+    echo " -p, --print-template Prints the template used and exits"
+    echo " -t, --template       Override default template"
+    echo ""
+}
+
+project-init(){
+    local directory="."
+    set +u
+    if [ ! -z "$1" ]; then
+        directory="$1"
+    fi
+    set -u
+
+    echo "Creating git-project"
+    mkdir -p "${directory}" && cd "${directory}"
+    if [ ! -z "${TEMPLATE}" ]; then
+        echo "template: ${TEMPLATE}"
+        git clone "${TEMPLATE}" .
+        git remote remove origin
+        git submodule update --init --recursive
+    fi
+    if [ ! -z "${ORIGIN}" ]; then
+        echo "origin: ${ORIGIN}"
+        git remote add origin "${ORIGIN}"
+    fi
+}
+
+cleanup() {
+    return
+}
+trap cleanup EXIT
+
+SCRIPT=$(basename $0)
+TEMPLATE=$(git config project.template || true)
+ORIGIN=
+
+set +e
+ARGS=$(getopt -o ho:pt: -l "help,origin:,print-template,template:" -n "$SCRIPT" -- "$@");
+if [ $? -ne 0 ]; then
+    set -e
+    usage
+    exit 129
+fi
+set -e
+
+eval set -- "$ARGS";
+
+while true; do
+    case $1 in
+        -h)
+            shift
+            usage
+            exit 0
+            ;;
+        --help)
+            shift
+            git help project-init "$@"
+            exit $?
+            ;;
+        -o|--origin)
+            shift
+            ORIGIN=$1
+            shift
+            ;;
+        -p|--print-template)
+            shift
+            echo ${TEMPLATE}
+            exit 0
+            ;;
+        -t|--template)
+            shift
+            TEMPLATE=$1
+            shift
+            ;;
+        --)
+            shift;
+            break;
+            ;;
+    esac
+done
+
+project-init "$@"
+#project-init
+exit $?

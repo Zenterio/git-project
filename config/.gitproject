@@ -1,0 +1,4 @@
+[project]
+template=git@github.com:devconsoft/git-project-template.git
+update-repo=git@github.com:devconsoft/git-project.git
+

@@ -1,0 +1,296 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "GITPROJECT\-DEVGUIDE" "7" "September 2015" "" "Git Project"
+.
+.SH "NAME"
+\fBgitproject\-devguide\fR \- Development Guide
+.
+.SH "INTRODUCTION"
+This page is for developers of the git\-project tool set\. As a pure user of git\-project, this page should hold little interest for you\.
+.
+.SH "INSTALL DEVELOPMENT TOOLS"
+Run:
+.
+.P
+$ \fBmake dev\-install\fR
+.
+.P
+It installs ronn as a user local gem (ruby package)\. It requires that gem 2 (ruby 2) is installed\. Ronn is used for document generation\.
+.
+.P
+If you are using a system such as Suse that uses a different user for sudo invocations, please set the path to ronn manually by issuing:
+.
+.P
+$ \fBsudo git config \-\-global project\.dev\.ronn\-path PATH\-TO\-RONN\fR
+.
+.P
+or set the path on system level using \fI\-\-system\fR\.
+.
+.SH "GENERATE DOCUMENTATION"
+The documentation is generated using ronn, installed by \fBmake dev\-install\fR, which converts markdown files to roff man\-pages and HTML files\.
+.
+.P
+To generate the documentation execute:
+.
+.P
+$ \fBmake docs\fR
+.
+.P
+The documentation is generated in the man directory\.
+.
+.P
+After updated the documentation, always generate it and check in the generated files\. File generation should not be part of the installation process since it might be conflicts in the users environment\.
+.
+.SH "RUNNING TESTS"
+Tests can be run in sequence using:
+.
+.P
+$ \fBmake check [TEST_FILTER="<PATTERN>"] [TEST_OPTS="\-h|\-v"]\fR
+.
+.P
+or use \fBprove\fR as the test runner and run in parallel and in random order using:
+.
+.P
+$ \fBmake prove [TEST_FILTER="<PATTERN>"] [PROVE_OPTS="\-j8"] [TEST_OPTS="\-h|\-v"]\fR
+.
+.P
+It is highly recommended that you run make prove with option \-jN to execute tests in parallel\. It helps with identifying test dependencies, race\-conditions and other things that indicate a dubious test\.
+.
+.SS "Dev Test and System Test"
+By default the test is performed on the current state of development, the files in the working area\.
+.
+.P
+However, if the variable SYSTEM_TEST is defined, the tests are run against the current installation\. In this mode, not all tests will be run since some tests modifies the current installation or have under dependencies that make them unsuitable to run on system level\.
+.
+.SS "Filter Tests"
+TEST_FILTER takes GLOB file pattern to match against the test files in the test directory\. The file extension \.test is concatenated onto the pattern and should not be part of the pattern itself\.
+.
+.P
+The filter can be used to select a subset of the tests to be run\. By default, all tests are run (pattern: *)\.
+.
+.SS "Test Groups"
+The test suites are divided into groups by naming convention of the files:
+.
+.TP
+0000
+Template, not allowed to have test extension
+.
+.TP
+000X
+Installation & software update tests
+.
+.TP
+NNNX
+Command NNN, yes we have head\-room for more than 99 commands
+.
+.SS "Examples"
+Run all tests in parallel using 8 concurrent process:
+.
+.P
+$ \fBmake prove PROVE_OPTS="\-j8"\fR
+.
+.P
+Run all tests for commands 1\-4 in sequence:
+.
+.P
+$ \fBmake check TEST_FILTER="??[1\-4]?\-*"\fR
+.
+.P
+Run single test in verbose mode for trouble\-shooting:
+.
+.P
+$ \fBmake check TEST_FILTER=0030\-*" TEST_OPTS="\-v"\fR
+.
+.P
+Print the test cases that would be run by selected filter:
+.
+.P
+$ \fBmake check TEST_FILTER="??[1\-9]?\-*" TEST_OPTS="\-h"\fR
+.
+.SH "ARCHITECTURE"
+git\-project makes use of the general sub\-command structure of git that allows any command in the users path that with starts with git\-\fBCOMMAND\fR to be executed by git\.
+.
+.P
+\fBgit COMMAND \-\-help\fR, equivalent to \fBgit help COMMAND\fR, will always launch the man page \fBgit\-COMMAND(1)\fR\.
+.
+.P
+In addition to performing basic tasks, \fBgit\-project\fR also acts as a dispatcher to sub\-commands\. It will dispatch git project \fBSUBCOMMAND\fR to \fBgit\-project\-SUBCOMMAND\fR\.
+.
+.P
+Each command/subcommand is implemented in its own file\. The main implementation language is bash\. The file is placed in the \fBbin\fR directory\.
+.
+.P
+All commands/subcommands are documented using markdown\. HTML and roff man pages are generated using ronn as part of the document generation step\. Each command/subcommand has its own documentation file in the \fBman\fR directory\.
+.
+.P
+All commands/subcommands have bash completion, implemented in \fBetc/bash_completion\.sh\fR\.
+.
+.P
+The bash scripts use a library include system where functions are included using:
+.
+.IP "" 4
+.
+.nf
+
+##lib\-name##
+.
+.fi
+.
+.IP "" 0
+.
+.P
+All library functions are stored in the \fBlib\fR directory\. Each file contains a single function and are named after the function it contains\. The install step performs inlining of all the included libraries before they are copied to the destination directory\. Hence, don\'t expect to be able to run the commands directly from the bin directory\. The processed version of the command scripts are temporarily stored in the build directory\. To prevent make from deleting the intermediate files, add the option \fBKEEP_BUILD_FILES=y\fR when running make\.
+.
+.P
+Typical work flow:
+.
+.IP "\(bu" 4
+Create document file in \fBman\fR directory, named \fBgit\-project\-SUBCOMMAND\.mk\fR, using the template man/template\.md\.
+.
+.IP "\(bu" 4
+Create command file in \fBbin\fR directory, named \fBgit\-project\-SUBCOMMAND\fR, no file extension, using the template bin/template\.
+.
+.IP "\(bu" 4
+Update /etc/bash_completion\.sh\.
+.
+.IP "\(bu" 4
+Test your command extensively!
+.
+.IP "\(bu" 4
+Run \fBmake docs\fR to generate the documentation\.
+.
+.IP "\(bu" 4
+Check in your changes including the generated documentation\.
+.
+.IP "" 0
+.
+.P
+\fB!! Make sure to generate all documentation before committing !!\fR
+.
+.SH "CONFIGURATION"
+All values that are subject to change and can be considered configuration should not be hard\-coded into scripts\. Instead they should be written to the system or user git config under the section \fBproject\fR\.
+.
+.P
+Installation configuration should be stored in config/\.gitproject and read during the installation using: \fBgit config \-\-file config/\.gitproject project\.KEY\fR\.
+.
+.SH "WRITING DOCUMENTATION"
+Use the template \fIman/template\.md\fR for writing documentation\.
+.
+.P
+Use the following format for single commands:
+.
+.P
+$ \fBcommand options\fR
+.
+.P
+Only use level\-1 heading on the top heading indicating the command\. The format is Ronn specific\.
+.
+.P
+Use level\-2 and level\-3 headings to organize your content\. Level\-2 headings are written with all capital letters\. Level\-3 headings follow standard English rules for capitalization of words in titles\.
+.
+.P
+Text written on level\-2 should be left aligned\. Exception to this rule is options bullet list that is indented 2 spaces\. Options list should always be written:
+.
+.IP "" 4
+.
+.nf
+
+* \-short, \-\-long option:
+description of option
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Text written on level\-3 should be indented two spaces to make it easier to follow the structure of the document\. See README\.md as an example\.
+.
+.P
+Larger code examples, console commands and output examples and should be written with 4 space indentation since that results in no\-formatting\.
+.
+.P
+Markdown files should maintain ca 80\-100 character width\.
+.
+.SH "WRITING COMMANDS"
+Use the template \fIbin/template\fR for writing bash script commands\.
+.
+.P
+The library function replaces all tags ##lib## with the library definition, found in \fIlib\fR\.
+.
+.P
+This mechanism is used to utilize code reuse without being forced to maintain complex sourcing schemes\.
+.
+.SH "WRITING TESTS"
+The test framework used is \fBsharness\fR, which is a bash testing framework based on the framework used to test git\.
+.
+.P
+Test cases should be placed in the test directory, prefix with a test group code, see \fITest groups\fR above, followed by the name of the test suite and with the \fI\.test\fR file extension\.
+.
+.IP "" 4
+.
+.nf
+
+NNNN\-name\-of\-suite\.test
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Modifications has been done to the sharness Makefile and sharness\.sh to fit the git\-project context\. A wrapper file is also used to include additional test\-libraries and extensions\.
+.
+.P
+To write a test, use the 0000\-template file in the test directory as template\.
+.
+.P
+Additional information about sharness can be found in tools/sharness, including the original source code\. Sharness is distributed under GPL, and hence all the modifications to sharness is also covered by GPL\.
+.
+.SS "System tests"
+When writing new tests make sure to tag all tests that are not suitable for system test such as active system update, with DEV_TEST\.
+.
+.IP "" 4
+.
+.nf
+
+test_expect_sucess DEV_TEST \'my special test\' \'\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Reversely, tests that are purely system tests should be tagged with SYSTEM_TEST\.
+.
+.SH "WRITING GUIDES, SECTION\-7 MAN PAGES"
+Guides are placed in files named \fBgitproject\-GUIDE\.md\fR\. They should be marked as being part of section\-7 of the man pages\.
+.
+.P
+The naming convention gitproject without dash between git and project, cause the make file to create a section\-7 named man\-page file and the installation procedure to copy the file to man/man7 directory\.
+.
+.SH "EXTERNAL RESOURCES"
+This project make use of code from other Open Source projects\. Please respect their copyright and make sure to update the \fBcontributers\fR section in README\.mk\.
+.
+.SH "REFERENCES"
+How to install ronn manually \fIhttps://github\.com/rtomayko/ronn/blob/master/INSTALLING\fR
+.
+.P
+How to write markdown \fIhttp://daringfireball\.net/projects/markdown\fR
+.
+.P
+How to write tests in sharness \fIhttps://github\.com/mlafeldt/sharness\fR
+.
+.SH "COPYRIGHT"
+\(co DevConSoft, 2015
+.
+.P
+\(co Zenterio AB, 2015
+.
+.SH "LICENCE"
+\fBgit\-project\fR is released under the MIT License \fIhttp://opensource\.org/licenses/mit\-license\.html\fR\.
+.
+.SH "REPORTING BUGS"
+TBD
+.
+.SH "SEE ALSO"
+TBD
